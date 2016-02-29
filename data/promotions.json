@@ -1,0 +1,17 @@
+[
+  {
+    "code": "BUY_2_GET_1_FREE",
+    "name": "买二赠一",
+    "items": [
+      "ITEM000001",
+      "ITEM000005"
+    ]
+  },
+  {
+    "code": "5_PERCENT_OFF",
+    "name": "95折",
+    "items": [
+      "ITEM000003"
+    ]
+  }
+]
