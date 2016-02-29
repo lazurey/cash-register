@@ -2,9 +2,13 @@
 
 ## Run test
 
-`npm install mocha -g`
-`cd test`
-`mocha`
+- `npm install mocha -g`
+- `cd test`
+- `mocha test.js`
+
+Test step by step:
+
+- `mocha unit.js`
 
 ## Directly use
 

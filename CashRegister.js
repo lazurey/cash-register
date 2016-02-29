@@ -4,14 +4,14 @@ const goods = require('./data/goods.json')
 const promotions = require('./data/promotions.json')
 
 class CashRegister {
-  constructor() {
-    this.final_obj = {}
+  constructor(list) {
+    this.list = list
+    this.final_list = {}
   }
 
-  process(list) {
-    this.list = list
+  process() {
     this.process_original_list().process_promotions().process_price()
-    return this.generate_receipt(this.final_obj)
+    return this.generate_receipt()
   }
 
   _get_goods_detail(code) {
@@ -24,10 +24,9 @@ class CashRegister {
   }
 
   process_original_list() {
-    let list = this.list
     let basic_list = []
 
-    for (let item of list) {
+    for (let item of this.list) {
       let code = (item.indexOf('-') > -1) ? item.split('-')[0] : item
       let times = (item.indexOf('-') > -1) ? parseInt(item.split('-')[1]) : 1
       let exist_index = basic_list.findIndex(x => x.code === code)
@@ -35,66 +34,60 @@ class CashRegister {
       if (exist_index === -1) {
         let detail = this._get_goods_detail(code)
         if (!detail) continue
-        
         detail.count = times
         basic_list.push(detail)
       } else {
         basic_list[exist_index].count++
       }
-
     }
     this.list = basic_list
     return this
   }
 
   process_promotions() {
-    let purchase_list = this.list
-    for (let item of purchase_list) {
+    for (let item of this.list) {
       let promo = this._get_item_promotion(item.code)
       if (promo && !item.promo) item.promo = promo
     }
-    this.list = purchase_list
     return this
   }
 
   process_price() {
-    let purchase_list = this.list
     let summary = {
       total: 0.00,
       saving: 0.00
     }
     let buy_2_get_1 = []
 
-    for (let item of purchase_list) {
+    for (let item of this.list) {
+
       if (item.promo === 'BUY_2_GET_1_FREE') {
         let saving_count = Math.floor(item.count / 3)
         item.saving = saving_count * item.price
-        item.summary = item.count * item.price - item.saving
-        let gift_obj = {
+        buy_2_get_1.push({
           name: item.name,
           count: saving_count,
           unit: item.unit
-        }
-        buy_2_get_1.push(gift_obj)
+        })
       } else if (item.promo === '5_PERCENT_OFF') {
         item.saving = item.count * item.price * 0.05
-        item.summary = item.count * item.price - item.saving
-      } else {
-        item.summary = item.count * item.price
       }
 
+      item.summary = item.count * item.price
+      item.summary -= item.saving || 0
       summary.total += item.summary
       summary.saving += item.saving || 0
     }
 
-    this.final_obj = {
-      'detail': purchase_list,
+    this.final_list = {
+      'detail': this.list,
       '2get1': buy_2_get_1,
       'summary': summary
     }
   }
 
-  generate_receipt(final_obj) {
+  generate_receipt() {
+    let final_obj = this.final_list
     let receipt = '***<没钱赚商店>购物清单***\n'
     for (let item of final_obj.detail) {
       receipt += `名称：${item.name}，数量：${item.count}${item.unit}，单价：${item.price.toFixed(2)}(元)，小计：${item.summary.toFixed(2)}(元)`
@@ -120,6 +113,7 @@ class CashRegister {
     receipt += '**********************'
     return receipt
   }
+
 }
 
 module.exports = CashRegister

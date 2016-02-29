@@ -16,7 +16,7 @@ describe('Test Cash Register', () => {
         'ITEM000005',
         'ITEM000005'
     ]
-    let machine = new CashRegister()
+    let machine = new CashRegister(goods_list)
     
     const expect_receipt = `***<没钱赚商店>购物清单***
 名称：羽毛球，数量：5个，单价：1.00(元)，小计：4.00(元)
@@ -30,7 +30,7 @@ describe('Test Cash Register', () => {
 总计：20.45(元)
 节省：4.55(元)
 **********************`
-    assert.equal(expect_receipt, machine.process(goods_list))
+    assert.equal(expect_receipt, machine.process())
   })
 
   it('should print buy 2 get 1 free list in receipt', () => {
@@ -45,7 +45,7 @@ describe('Test Cash Register', () => {
         'ITEM000005'
     ]
 
-    let machine = new CashRegister()
+    let machine = new CashRegister(goods_list)
     const expect_receipt = `***<没钱赚商店>购物清单***
 名称：羽毛球，数量：5个，单价：1.00(元)，小计：4.00(元)
 名称：可口可乐，数量：3瓶，单价：3.00(元)，小计：6.00(元)
@@ -57,20 +57,20 @@ describe('Test Cash Register', () => {
 总计：10.00(元)
 节省：4.00(元)
 **********************`
-    assert.equal(expect_receipt, machine.process(goods_list))
+    assert.equal(expect_receipt, machine.process())
   })
 
   it('should omit promotion list if no promotion goods', () => {
     const goods_list = [
       'ITEM000006-3'
     ]
-    let machine = new CashRegister()
+    let machine = new CashRegister(goods_list)
     const expect_receipt = `***<没钱赚商店>购物清单***
 名称：没有任何优惠的口香糖，数量：3瓶，单价：10.00(元)，小计：30.00(元)
 ----------------------
 总计：30.00(元)
 **********************`
-    assert.equal(expect_receipt, machine.process(goods_list))
+    assert.equal(expect_receipt, machine.process())
   })
 
   it('should print saving amount when 95% promotion goods in list', () => {
@@ -83,8 +83,8 @@ describe('Test Cash Register', () => {
 总计：10.45(元)
 节省：0.55(元)
 **********************`
-    let machine = new CashRegister()
-    assert.equal(expect_receipt, machine.process(goods_list))
+    let machine = new CashRegister(goods_list)
+    assert.equal(expect_receipt, machine.process())
   })
 
 })
