@@ -3,19 +3,6 @@
 const goods = require('./data/goods.json')
 const promotions = require('./data/promotions.json')
 
-const goods_list = [
-    'ITEM000001',
-    'ITEM000001',
-    'ITEM000001',
-    'ITEM000001',
-    'ITEM000001',
-    'ITEM000003-2',
-    'ITEM000005',
-    'ITEM000005',
-    'ITEM000005'
-]
-
-
 class CashRegister {
   constructor() {
     this.final_obj = {}
