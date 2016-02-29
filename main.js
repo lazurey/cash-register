@@ -12,7 +12,7 @@ const goods_list = [
   'ITEM000005'
 ]
 
-const machine = new CashRegister()
+const machine = new CashRegister(goods_list)
 
-const receipt = machine.process(goods_list)
+const receipt = machine.process()
 console.log(receipt)
